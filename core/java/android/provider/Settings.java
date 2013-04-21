@@ -9752,6 +9752,17 @@ public final class Settings {
         public static final String ENCODED_SURROUND_OUTPUT = "encoded_surround_output";
 
         /**
+         * Persisted volume keys always control media volume
+         *
+         *  0 - ring (default)
+         *  1 - media
+         *
+         * @hide
+         */
+        public static final String VOLUME_KEYS_CONTROL_MEDIA_STREAM =
+                "volume_keys_control_media_stream";
+
+        /**
          * Persisted safe headphone volume management state by AudioService
          * @hide
          */

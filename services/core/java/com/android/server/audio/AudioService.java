@@ -587,6 +587,7 @@ public class AudioService extends IAudioService.Stub {
     private AudioManagerInternal.RingerModeDelegate mRingerModeDelegate;
     private VolumePolicy mVolumePolicy = VolumePolicy.DEFAULT;
     private long mLoweredFromNormalToVibrateTime;
+    private boolean mVolumeKeysControlMediaStream;
 
     // Intent "extra" data keys.
     public static final String CONNECT_INTENT_KEY_PORT_NAME = "portName";
@@ -1298,6 +1299,9 @@ public class AudioService extends IAudioService.Stub {
             updateRingerModeAffectedStreams();
             readDockAudioSettings(cr);
             sendEncodedSurroundMode(cr);
+
+            mVolumeKeysControlMediaStream = Settings.Global.getInt(cr,
+                    Settings.Global.VOLUME_KEYS_CONTROL_MEDIA_STREAM, 0) == 1;
         }
 
         mMuteAffectedStreams = System.getIntForUser(cr,
@@ -3853,10 +3857,16 @@ public class AudioService extends IAudioService.Stub {
                     if (DEBUG_VOL)
                         Log.v(TAG, "getActiveStreamType: Forcing STREAM_MUSIC stream active");
                     return AudioSystem.STREAM_MUSIC;
-                    } else {
+                } else {
+                    if (mVolumeKeysControlMediaStream) {
                         if (DEBUG_VOL)
                             Log.v(TAG, "getActiveStreamType: Forcing STREAM_RING b/c default");
+                        return AudioSystem.STREAM_MUSIC;
+                    } else {
+                        if (DEBUG_VOL)
+                            Log.v(TAG, "getActiveStreamType: Forcing STREAM_MUSIC b/c default");
                         return AudioSystem.STREAM_RING;
+                    }
                 }
             } else if (isAfMusicActiveRecently(0)) {
                 if (DEBUG_VOL)
@@ -3891,9 +3901,16 @@ public class AudioService extends IAudioService.Stub {
                     if (DEBUG_VOL) Log.v(TAG, "getActiveStreamType: forcing STREAM_MUSIC");
                     return AudioSystem.STREAM_MUSIC;
                 } else {
-                    if (DEBUG_VOL) Log.v(TAG,
-                            "getActiveStreamType: using STREAM_NOTIFICATION as default");
-                    return AudioSystem.STREAM_NOTIFICATION;
+                    if (mVolumeKeysControlMediaStream) {
+                        if (DEBUG_VOL)
+                            Log.v(TAG,
+                                    "getActiveStreamType: using STREAM_NOTIFICATION as default");
+                        return AudioSystem.STREAM_MUSIC;
+                    } else {
+                        if (DEBUG_VOL)
+                            Log.v(TAG, "getActiveStreamType: Forcing STREAM_MUSIC b/c default");
+                        return AudioSystem.STREAM_NOTIFICATION;
+                    }
                 }
             }
             break;
@@ -5054,6 +5071,8 @@ public class AudioService extends IAudioService.Stub {
                     Settings.Global.ENCODED_SURROUND_OUTPUT_AUTO);
             mContentResolver.registerContentObserver(Settings.Global.getUriFor(
                     Settings.Global.ENCODED_SURROUND_OUTPUT), false, this);
+            mContentResolver.registerContentObserver(Settings.Global.getUriFor(
+                    Settings.Global.VOLUME_KEYS_CONTROL_MEDIA_STREAM), false, this);
         }
 
         @Override
@@ -5074,6 +5093,8 @@ public class AudioService extends IAudioService.Stub {
                 readDockAudioSettings(mContentResolver);
                 updateMasterMono(mContentResolver);
                 updateEncodedSurroundOutput();
+                mVolumeKeysControlMediaStream = Settings.Global.getInt(mContentResolver,
+                        Settings.Global.VOLUME_KEYS_CONTROL_MEDIA_STREAM, 0) == 1;
             }
         }
 
