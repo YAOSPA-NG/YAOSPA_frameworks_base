@@ -4255,6 +4255,13 @@ public final class Settings {
         public static final String SLIM_RECENTS_CORNER_RADIUS = "slim_recents_corner_radius";
 
         /**
+         * Whether to use switch to last app or stay on current app when exiting SlimRecents
+         * using the recent key
+         * @hide
+         */
+        public static final String SLIM_RECENTS_LAST_APP = "slim_recents_last_app";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
