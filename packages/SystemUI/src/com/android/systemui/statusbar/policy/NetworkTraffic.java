@@ -57,8 +57,6 @@ public class NetworkTraffic extends TextView {
     private long totalRxBytes;
     private long totalTxBytes;
     private long lastUpdateTime;
-    private int txtSizeSingle;
-    private int txtSizeMulti;
     private int KB = KILOBIT;
     private int MB = KB * KB;
     private int GB = MB * KB;
@@ -120,13 +118,9 @@ public class NetworkTraffic extends TextView {
                     output = formatOutput(timeDelta, txData, symbol);
                 }
 
-                // Ensure text size is where it needs to be
-                int textSize;
+                // Go to new line in case we show both
                 if (isSet(mState, MASK_UP + MASK_DOWN)) {
                     output += "\n";
-                    textSize = txtSizeMulti;
-                } else {
-                    textSize = txtSizeSingle;
                 }
 
                 // Add information for downlink if it's called for
@@ -136,7 +130,8 @@ public class NetworkTraffic extends TextView {
 
                 // Update view if there's anything new to show
                 if (! output.contentEquals(getText())) {
-                    setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)textSize);
+                    // Ensure text size is where it needs to be
+                    updateTextSize();
                     setText(output);
                 }
                 setVisibility(View.VISIBLE);
@@ -230,9 +225,6 @@ public class NetworkTraffic extends TextView {
      */
     public NetworkTraffic(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        final Resources resources = getResources();
-        txtSizeSingle = resources.getDimensionPixelSize(R.dimen.net_traffic_single_text_size);
-        txtSizeMulti = resources.getDimensionPixelSize(R.dimen.net_traffic_multi_text_size);
         Handler mHandler = new Handler();
         SettingsObserver settingsObserver = new SettingsObserver(mHandler);
         settingsObserver.observe();
@@ -361,5 +353,19 @@ public class NetworkTraffic extends TextView {
         mIconTint = iconTint;
         setTextColor(mIconTint);
         updateTrafficDrawable();
+    }
+
+    public void updateTextSize() {
+
+        final int txtSizeSingle =
+                getResources().getDimensionPixelSize(R.dimen.net_traffic_single_text_size);
+        final int txtSizeMulti =
+                getResources().getDimensionPixelSize(R.dimen.net_traffic_multi_text_size);
+
+        if (isSet(mState, MASK_UP + MASK_DOWN)) {
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)txtSizeMulti);
+        } else {
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)txtSizeSingle);
+        }
     }
 }

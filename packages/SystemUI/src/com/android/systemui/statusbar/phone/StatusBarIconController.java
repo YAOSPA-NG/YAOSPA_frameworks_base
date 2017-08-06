@@ -610,6 +610,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
             child.setLayoutParams(lp);
         }
         scaleBatteryMeterViews(mContext);
+        mNetworkTraffic.updateTextSize();
     }
 
     private void updateClock() {
