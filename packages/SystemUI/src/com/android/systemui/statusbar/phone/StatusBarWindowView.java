@@ -90,6 +90,8 @@ public class StatusBarWindowView extends FrameLayout {
     private GestureDetector mDoubleTapGesture;
     private PowerManager mPowerManager;
 
+    private boolean mDozeWakeupDoubleTap;
+    private GestureDetector mDozeWakeupDoubleTapGesture;
 
     // Implements the floating action mode for TextView's Cut/Copy/Past menu. Normally provided by
     // DecorView, but since this is a special window we have to roll our own.
@@ -200,6 +202,14 @@ public class StatusBarWindowView extends FrameLayout {
                 return true;
             }
         });
+        mDozeWakeupDoubleTapGesture = new GestureDetector(mContext,
+                new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                mService.wakeUpIfDozing(e.getEventTime(), e);
+                return true;
+            }
+        });
 
         // We need to ensure that our window doesn't suffer from overdraw which would normally
         // occur if our window is translucent. Since we are drawing the whole window anyway with
@@ -286,10 +296,16 @@ public class StatusBarWindowView extends FrameLayout {
                 && mStackScrollLayout.getVisibility() == View.VISIBLE
                 && mService.getBarState() == StatusBarState.KEYGUARD
                 && !mService.isBouncerShowing()) {
-            intercept = mDragDownHelper.onInterceptTouchEvent(ev);
+            if (!mDozeWakeupDoubleTap || (mDozeWakeupDoubleTap && !mService.isDozing())) {
+                intercept = mDragDownHelper.onInterceptTouchEvent(ev);
+            }
             // wake up on a touch down event, if dozing
-            if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                mService.wakeUpIfDozing(ev.getEventTime(), ev);
+            if (mDozeWakeupDoubleTap) {
+                mDozeWakeupDoubleTapGesture.onTouchEvent(ev);
+            } else {
+                if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    mService.wakeUpIfDozing(ev.getEventTime(), ev);
+                }
             }
         }
         if (!intercept) {
@@ -723,6 +739,8 @@ public class StatusBarWindowView extends FrameLayout {
         void observe() {
             mResolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.GESTURE_DOUBLE_TAP_SLEEP), false, this, UserHandle.USER_ALL);
+            mResolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOUBLE_TAP_WAKE_DOZE), false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -738,6 +756,8 @@ public class StatusBarWindowView extends FrameLayout {
         public void update() {
             mDoubleTapToSleepEnabled = Settings.System.getIntForUser(mResolver,
                     Settings.System.GESTURE_DOUBLE_TAP_SLEEP, 0, UserHandle.USER_CURRENT) == 1;
+            mDozeWakeupDoubleTap = Settings.System.getIntForUser(mResolver,
+                    Settings.System.DOUBLE_TAP_WAKE_DOZE, 0, UserHandle.USER_CURRENT) == 1;
         }
     }
 }
