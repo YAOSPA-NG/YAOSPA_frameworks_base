@@ -29,4 +29,7 @@
   <java-symbol type="bool" name="config_ledCanPulse" />
   <java-symbol type="array" name="notification_light_package_mapping" />
 
+  <!-- BatteryLED fast charge -->
+  <java-symbol type="integer" name="config_chargingFastThreshold" />
+
 </resources>
