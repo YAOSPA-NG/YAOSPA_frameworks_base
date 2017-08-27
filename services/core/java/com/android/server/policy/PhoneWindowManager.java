@@ -294,6 +294,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     static public final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
     static public final String SYSTEM_DIALOG_REASON_ASSIST = "assist";
 
+//    // Double-tap-to-doze
+//    private boolean mDoubleTapToWake;
+//    private boolean mDoubleTapToDoze;
+//    private boolean mNativeDoubleTapToDozeAvailable;
+
     /**
      * These are the system UI flags that, when changing, can cause the layout
      * of the screen to change.
@@ -1111,6 +1116,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.THREE_FINGER_SCREENSHOT_ENABLED), false, this,
                     UserHandle.USER_ALL);
+
+//            // Double-tap-to-doze
+//            resolver.registerContentObserver(Settings.Secure.getUriFor(
+//                    Settings.Secure.DOUBLE_TAP_TO_WAKE), false, this,
+//                    UserHandle.USER_ALL);
+//            resolver.registerContentObserver(Settings.System.getUriFor(
+//                    Settings.System.DOZE_TRIGGER_DOUBLETAP), false, this,
+//                    UserHandle.USER_ALL);
+
             updateSettings();
         }
 
@@ -2128,6 +2142,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mPerfKey = new BoostFramework();
             mPerfRotation = new BoostFramework();
         }
+//        // Double-tap-to-doze
+//        mNativeDoubleTapToDozeAvailable = !TextUtils.isEmpty(
+//                mContext.getResources().getString(R.string.config_dozeDoubleTapSensorType));
 
         // Init display burn-in protection
         boolean burnInProtectionEnabled = context.getResources().getBoolean(
@@ -2655,6 +2672,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         Resources resources = mContext.getResources();
         boolean updateRotation = false;
         boolean forceRelayout = false;
+
+//        // Double-tap-to-doze
+//        mDoubleTapToWake = Settings.Secure.getInt(resolver,
+//                Settings.Secure.DOUBLE_TAP_TO_WAKE, 0) == 1;
+//        mDoubleTapToDoze = Settings.System.getInt(resolver,
+//                Settings.System.DOZE_TRIGGER_DOUBLETAP, 0) == 1;
+
         synchronized (mLock) {
             mEndcallBehavior = Settings.System.getIntForUser(resolver,
                     Settings.System.END_BUTTON_BEHAVIOR,
@@ -7384,7 +7408,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
             case KeyEvent.KEYCODE_WAKEUP: {
                 result &= ~ACTION_PASS_TO_USER;
-                isWakeKey = true;
+//                // Double-tap-to-doze
+//                if (mDoubleTapToWake && mDoubleTapToDoze && !mNativeDoubleTapToDozeAvailable) {
+//                    isWakeKey = false;
+//                    if (!down) {
+//                        mContext.sendBroadcast(new Intent("com.android.systemui.doze.pulse"));
+//                    }
+//                } else {
+                    isWakeKey = true;
+//                }
                 break;
             }
 
