@@ -92,13 +92,6 @@
   <java-symbol type="string" name="reboot_confirm" />
   <java-symbol type="string" name="reboot_progress" />
 
-  <!-- Notification and battery LED Pulse -->
-  <java-symbol type="bool" name="config_ledCanPulse" />
-  <java-symbol type="bool" name="config_multiColorBatteryLed" />
-  <java-symbol type="bool" name="config_multiColorNotificationLed" />
-  <java-symbol type="bool" name="config_intrusiveBatteryLed" />
-  <java-symbol type="array" name="notification_light_package_mapping" />
-
   <!-- Gestures Settings -->
   <java-symbol type="integer" name="config_doubleTapKeyCode" />
   <java-symbol type="integer" name="config_drawVKeyCode" />
