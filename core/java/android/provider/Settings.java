@@ -4132,10 +4132,10 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_ANIMATE_ARROWS = "network_traffic_animate_arrows";
 
         /**
-         * Whether to show the negociated charger current in the lockscreen
+         * Whether to show the battery info on the lockscreen while charging
          * @hide
          */
-        public static final String LOCKSCREEN_CHARGING_CURRENT = "lockscreen_charging_current";
+        public static final String LOCKSCREEN_BATTERY_INFO = "lockscreen_battery_info";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
