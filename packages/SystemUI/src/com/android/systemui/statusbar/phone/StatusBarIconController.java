@@ -86,6 +86,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private LinearLayout mCenterClockLayout;
     private boolean mShowClock;
     private int mClockStyle;
+    private int mClockColor;
+    private boolean mClockColorOverride;
 
     private NetworkTraffic mNetworkTraffic;
 
@@ -164,7 +166,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mLeftClock.setStatusBarIconController(this);
 
         TunerService.get(mContext).addTunable(this, ICON_BLACKLIST, Clock.CLOCK_SHOW,
-                Clock.CLOCK_STYLE);
+                Clock.CLOCK_STYLE, Clock.CLOCK_COLOR_OVERRIDE, Clock.CLOCK_COLOR);
     }
 
     public void setSignalCluster(SignalClusterView signalCluster) {
@@ -209,6 +211,21 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         if (Clock.CLOCK_STYLE.equals(key)) {
             mClockStyle = newValue == null ?
                     Clock.CLOCK_STYLE_RIGHT_CLOCK : Integer.parseInt(newValue);
+            return;
+        }
+
+        if (Clock.CLOCK_COLOR_OVERRIDE.equals(key)) {
+            mClockColorOverride = newValue != null &&
+                    Integer.parseInt(newValue) == Clock.CLOCK_COLOR_OVERRIDE_ENABLED;
+            applyClockColorTint();
+            return;
+        }
+
+        if (Clock.CLOCK_COLOR.equals(key)) {
+            int defaultColor = mContext.getResources().getColor(R.color.status_bar_clock_color);
+            mClockColor = newValue == null ?
+                    defaultColor : Integer.parseInt(newValue);
+            applyClockColorTint();
             return;
         }
 
@@ -582,10 +599,20 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mBatteryMeterView.setDarkIntensity(
                 isInArea(mTintArea, mBatteryMeterView) ? mDarkIntensity : 0);
         mBatteryLevelView.setTextColor(getTint(mTintArea, mBatteryLevelView, mIconTint));
-        mRightClock.setTextColor(getTint(mTintArea, mRightClock, mIconTint));
-        mCenterClock.setTextColor(getTint(mTintArea, mCenterClock, mIconTint));
-        mLeftClock.setTextColor(getTint(mTintArea, mLeftClock, mIconTint));
         mNetworkTraffic.updateIconTint(mIconTint);
+        applyClockColorTint();
+    }
+
+    public void applyClockColorTint() {
+        if (mClockColorOverride) {
+            mRightClock.setTextColor(getTint(mTintArea, mRightClock, mClockColor));
+            mCenterClock.setTextColor(getTint(mTintArea, mCenterClock, mClockColor));
+            mLeftClock.setTextColor(getTint(mTintArea, mLeftClock, mClockColor));
+        } else {
+            mRightClock.setTextColor(getTint(mTintArea, mRightClock, mIconTint));
+            mCenterClock.setTextColor(getTint(mTintArea, mCenterClock, mIconTint));
+            mLeftClock.setTextColor(getTint(mTintArea, mLeftClock, mIconTint));
+        }
     }
 
     public void appTransitionPending() {
