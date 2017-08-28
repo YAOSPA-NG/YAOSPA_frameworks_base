@@ -23,4 +23,8 @@
     <!-- ADB notification message-->
     <string name="adb_active_generic_notification_message">Touchez pour désactiver le débogage.</string>
 
+    <!-- kill app -->
+    <string name="app_killed_message"><xliff:g id="string">%s</xliff:g> arrété</string>
+    <string name="no_app_killed_message">Rien à arréter</string>
+
 </resources>
