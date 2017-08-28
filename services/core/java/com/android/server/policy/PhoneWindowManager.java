@@ -158,6 +158,7 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.policy.PhoneWindow;
 import com.android.internal.policy.IShortcutService;
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.internal.util.DevUtils;
 import com.android.internal.util.ScreenShapeHelper;
 import com.android.internal.util.gesture.EdgeGesturePosition;
 import com.android.internal.util.gesture.EdgeServiceConstants;
@@ -176,6 +177,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * WindowManagerPolicy implementation for the Android phone UI.  This
@@ -256,6 +258,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private static final int KEY_ACTION_LAST_APP = 7;
     private static final int KEY_ACTION_SPLIT_SCREEN = 8;
     private static final int KEY_ACTION_SCREEN_OFF = 9;
+
+    // Additional actions
+    private static final int KEY_ACTION_KILL_APP = 1000;
 
     // Special values, used internal only.
     private static final int KEY_ACTION_HOME = 100;
@@ -4091,8 +4096,25 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             case KEY_ACTION_SCREEN_OFF:
                 mPowerManager.goToSleep(SystemClock.uptimeMillis());
                 break;
+            case KEY_ACTION_KILL_APP:
+                mHandler.postDelayed(mKillForegroundApp, 100);
+                break;
         }
     }
+
+    Runnable mKillForegroundApp = new Runnable() {
+        public void run() {
+            String killResult = DevUtils.killForegroundApp(mContext, mCurrentUserId);
+            if (killResult != null) {
+                performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
+            }
+            Toast.makeText(mContext, killResult == null
+                ? mContext.getString(R.string.no_app_killed_message)
+                : String.format(Locale.getDefault(),
+                        mContext.getString(R.string.app_killed_message),
+                        killResult), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     /**
      * Execute key code default action.
