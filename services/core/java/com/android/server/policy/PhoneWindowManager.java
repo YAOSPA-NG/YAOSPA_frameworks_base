@@ -261,6 +261,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     // Additional actions
     private static final int KEY_ACTION_KILL_APP = 1000;
+    private static final int KEY_ACTION_NOTIFICATIONS = 1001;
+    private static final int KEY_ACTION_QS_PANEL = 1002;
 
     // Special values, used internal only.
     private static final int KEY_ACTION_HOME = 100;
@@ -4098,6 +4100,26 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 break;
             case KEY_ACTION_KILL_APP:
                 mHandler.postDelayed(mKillForegroundApp, 100);
+                break;
+            case KEY_ACTION_NOTIFICATIONS:
+                IStatusBarService notificationBarService = getStatusBarService();
+                if (notificationBarService != null) {
+                    try {
+                        notificationBarService.expandNotificationsPanel();
+                    } catch (RemoteException e) {
+                        // do nothing.
+                    }
+                }
+                break;
+            case KEY_ACTION_QS_PANEL:
+                IStatusBarService qspanelBarService = getStatusBarService();
+                if (qspanelBarService != null) {
+                    try {
+                        qspanelBarService.expandSettingsPanel(null);
+                    } catch (RemoteException e) {
+                        // do nothing.
+                    }
+                }
                 break;
         }
     }
