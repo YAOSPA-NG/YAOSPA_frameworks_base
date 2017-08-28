@@ -101,6 +101,9 @@ public class KeyHandler {
     private static final int CAMERA = 7;
     private static final int DIALER = 8;
 
+    // Additionally supported actions.
+    private static final int DOZE_PULSE = 1000;
+
     private final Context mContext;
     private PowerManager mPowerManager;
     private PowerManagerInternal mPowerManagerInternal;
@@ -551,6 +554,10 @@ public class KeyHandler {
                 Intent dialIntent = new Intent(Intent.ACTION_DIAL);
                 dialIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(dialIntent, null);
+                handled = true;
+                break;
+            case DOZE_PULSE:
+                mContext.sendBroadcast(new Intent("com.android.systemui.doze.pulse"));
                 handled = true;
                 break;
             case AIRPLANE:
