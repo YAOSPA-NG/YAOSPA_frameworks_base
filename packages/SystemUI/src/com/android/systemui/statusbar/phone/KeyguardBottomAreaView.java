@@ -42,6 +42,7 @@ import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.service.media.CameraPrewarmService;
 import android.telecom.TelecomManager;
 import android.util.AttributeSet;
@@ -319,7 +320,9 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     }
 
     private void updateLeftAffordanceIcon() {
-        mLeftIsVoiceAssist = canLaunchVoiceAssist();
+        boolean forcePhoneShortcut = Settings.Secure.getInt(mContext.getContentResolver(),
+                Settings.Secure.KEYGUARD_VOICE_ASSIST, 1) == 0;
+        mLeftIsVoiceAssist = forcePhoneShortcut ? false : canLaunchVoiceAssist();
         int drawableId;
         int contentDescription;
         boolean visible = mUserSetupComplete;
