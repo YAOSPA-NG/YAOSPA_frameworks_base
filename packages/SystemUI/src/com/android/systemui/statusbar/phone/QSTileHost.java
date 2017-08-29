@@ -40,6 +40,7 @@ import com.android.systemui.qs.QSTile;
 import com.android.systemui.qs.external.CustomTile;
 import com.android.systemui.qs.external.TileLifecycleManager;
 import com.android.systemui.qs.external.TileServices;
+import com.android.systemui.qs.tiles.AdbOverNetworkTile;
 import com.android.systemui.qs.tiles.AirplaneModeTile;
 import com.android.systemui.qs.tiles.AlertSliderTile;
 import com.android.systemui.qs.tiles.AmbientDisplayTile;
@@ -443,6 +444,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (tileSpec.equals("nfc")) return new NfcTile(this);
         else if (tileSpec.equals("alertslider")) return new AlertSliderTile(this);
         else if (tileSpec.equals("ambient_display")) return new AmbientDisplayTile(this);
+        else if (tileSpec.equals("adb_network")) return new AdbOverNetworkTile(this);
         else if (tileSpec.equals("sync")) return new SyncTile(this);
         else if (tileSpec.equals("music")) return new MusicTile(this);
         // Intent tiles.
