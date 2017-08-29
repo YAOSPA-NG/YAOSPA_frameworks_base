@@ -105,4 +105,7 @@
     <string name="ime_right">IME Right</string>
     <string name="accessibility_ime_right">IME Right button</string>
 
+    <!-- accessibility label for button to open running apps prefscreen -->
+    <string name="accessibility_quick_settings_running_services">Open Running Services screen.</string>
+
 </resources>

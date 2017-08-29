@@ -103,4 +103,7 @@
     <string name="ime_right">Flèche droite</string>
     <string name="accessibility_ime_right">Flèche droite</string>
 
+    <!-- accessibility label for button to open running apps prefscreen -->
+    <string name="accessibility_quick_settings_running_services">Ouvrir l\'écran des services en exécution.</string>
+
 </resources>
