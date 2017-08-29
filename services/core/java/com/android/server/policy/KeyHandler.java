@@ -561,7 +561,6 @@ public class KeyHandler {
                 handled = true;
                 break;
             case AIRPLANE:
-                doHapticFeedback(true);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -579,11 +578,13 @@ public class KeyHandler {
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                doHapticFeedback(true);
                                 mPowerManager.goToSleep(SystemClock.uptimeMillis());
                             }
                         }, 1500);
                     }
                 });
+                handled = true;
                 break;
             default:
                 handled = false;
