@@ -103,4 +103,7 @@
     <string name="ime_right">Pfeiltaste Rechts</string>
     <string name="accessibility_ime_right">Pfeiltaste Rechts</string>
 
+    <!-- accessibility label for button to open running apps prefscreen -->
+    <string name="accessibility_quick_settings_running_services">Bildschirm der laufenden Dienste öffnen.</string>
+
 </resources>
