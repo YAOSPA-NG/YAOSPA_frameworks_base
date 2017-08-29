@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2016 Yank555.lu's Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Additonal QS tiles -->
+    <!-- ADB over network Tile -->
+    <string name="quick_settings_adb_network">ADB über Netzwerk</string>
+    <string name="quick_settings_network_adb_enabled_label">Aktiviert</string>
+    <string name="quick_settings_network_adb_disabled_label">Deaktiviert</string>
+    <string name="accessibility_quick_settings_network_adb_off">ADB über Netzwerk aktiv</string>
+    <string name="accessibility_quick_settings_network_adb_on">ADB über Netzwerk nicht aktiv</string>
+    <string name="accessibility_quick_settings_network_adb_changed_off">ADB über Netzwerk deaktiviert</string>
+    <string name="accessibility_quick_settings_network_adb_changed_on">ADB über Netzwerk aktiviert</string>
+
+    <!-- Ambient Display QS tile -->
+    <string name="accessibility_quick_settings_ambient_display_off">Ambient-Display ausgeschaltet</string>
+    <string name="accessibility_quick_settings_ambient_display_on">Ambient-Display eingeschaltet</string>
+    <string name="accessibility_quick_settings_ambient_display_changed_off">Ambient-Display wurde ausgeschaltet</string>
+    <string name="accessibility_quick_settings_ambient_display_changed_on">Ambient-Display wurde eingeschaltet</string>
+    <string name="quick_settings_ambient_display_label">Ambient-Display</string>
+
+    <!-- Brightness QS Tile -->
+    <string name="quick_settings_brightness">Helligkeit</string>
+
+    <!-- Caffeine QS Tile -->
+    <string name="quick_settings_caffeine_label">Caffeine</string>
+    <string name="accessibility_quick_settings_caffeine_off">Caffeine ausgeschaltet</string>
+    <string name="accessibility_quick_settings_caffeine_on">Caffeine eingeschaltet</string>
+
+    <!-- Expanded Desktop QS Tile -->
+    <string name="quick_settings_expanded_desktop">Erweitert</string>
+    <string name="quick_settings_expanded_desktop_off">Normal</string>
+
+    <!-- IME selector Tile -->
+    <string name="quick_settings_ime_label">Eingabemethode</string>
+
+    <!-- Music QS Tile -->
+    <string name="quick_settings_music_label">Musik</string>
+    <string name="quick_settings_music_play">Abspielen</string>
+    <string name="quick_settings_music_pause">Pause</string>
+
+    <!-- Quick settings customization -->
+    <string name="qs_menu_item_columns">Spalten</string>
+    <string name="qs_menu_item_reset">Zurückstellen</string>
+
+    <!-- Reboot/Recovery QS Tile -->
+    <string name="quick_settings_reboot_label">Neustart</string>
+    <string name="quick_settings_reboot_recovery_label">Recovery</string>
+
+    <!-- Screenshot QS tile -->
+    <string name="quick_settings_screenshot_label">Screenshot</string>
+
+    <!-- Sound QS Tile -->
+    <string name="quick_settings_sound_label">Ton</string>
+    <string name="quick_settings_sound_ring">Klingelton</string>
+    <string name="quick_settings_sound_vibrate">Vibrieren</string>
+    <string name="quick_settings_sound_dnd">Lautlos</string>
+
+    <!-- Sync QS tile -->
+    <string name="quick_settings_sync_label">Sync</string>
+    <string name="accessibility_quick_settings_sync_off">Sync ausgeschaltet</string>
+    <string name="accessibility_quick_settings_sync_on">Sync eingeschaltet</string>
+    <string name="accessibility_quick_settings_sync_changed_off">Sync wurde ausgeschaltet</string>
+    <string name="accessibility_quick_settings_sync_changed_on">Sync wurde eingeschaltet</string>
+
+    <!-- USB tether QS tile -->
+    <string name="quick_settings_usb_tether_label">USB-Tethering</string>
+    <string name="accessibility_quick_settings_usb_tether_off">USB-Tethering ausgeschaltet</string>
+    <string name="accessibility_quick_settings_usb_tether_on">USB-Tethering eingeschaltet</string>
+    <string name="accessibility_quick_settings_usb_tether_changed_off">USB-Tethering wurde ausgeschaltet</string>
+    <string name="accessibility_quick_settings_usb_tether_changed_on">USB-Tethering wurde eingeschaltet</string>
+
+</resources>
