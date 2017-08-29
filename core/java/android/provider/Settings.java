@@ -6970,6 +6970,12 @@ public final class Settings {
         public static final String SLEEP_TIMEOUT = "sleep_timeout";
 
         /**
+         * Controls whether recents button in recents screen enables paging.
+         * @hide
+         */
+        public static final String RECENTS_ENABLE_PAGING = "recents_enable_paging";
+
+        /**
          * The current assistant component. It could be a voice interaction service,
          * or an activity that handles ACTION_ASSIST, or empty which means using the default
          * handling.
