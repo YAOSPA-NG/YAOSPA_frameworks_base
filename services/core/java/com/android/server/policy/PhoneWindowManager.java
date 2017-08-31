@@ -4090,9 +4090,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 launchCamera();
                 break;
             case KEY_ACTION_LAST_APP:
-                awakenDreams();
-                // TODO> handle no recent apps
-                triggerVirtualKeypress(KeyEvent.KEYCODE_APP_SWITCH, !mRecentsVisible);
+                final ActivityManager am =
+                    (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+                ActivityManager.RunningTaskInfo lastTask = getLastTask(am);
+                am.moveTaskToFront(lastTask.id, ActivityManager.MOVE_TASK_NO_USER_ACTION);
                 break;
             case KEY_ACTION_SPLIT_SCREEN:
                 toggleSplitScreen();
@@ -4124,6 +4125,29 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 }
                 break;
         }
+    }
+
+    private ActivityManager.RunningTaskInfo getLastTask(final ActivityManager am) {
+        final String defaultHomePackage = resolveCurrentLauncherPackage();
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(5);
+
+        for (int i = 1; i < tasks.size(); i++) {
+            String packageName = tasks.get(i).topActivity.getPackageName();
+            if (!packageName.equals(defaultHomePackage)
+                    && !packageName.equals(mContext.getPackageName())
+                    && !packageName.equals("com.android.systemui")) {
+                return tasks.get(i);
+            }
+        }
+        return null;
+    }
+
+    private String resolveCurrentLauncherPackage() {
+        final Intent launcherIntent = new Intent(Intent.ACTION_MAIN)
+                .addCategory(Intent.CATEGORY_HOME);
+        final PackageManager pm = mContext.getPackageManager();
+        final ResolveInfo launcherInfo = pm.resolveActivity(launcherIntent, 0);
+        return launcherInfo.activityInfo.packageName;
     }
 
     Runnable mKillForegroundApp = new Runnable() {
