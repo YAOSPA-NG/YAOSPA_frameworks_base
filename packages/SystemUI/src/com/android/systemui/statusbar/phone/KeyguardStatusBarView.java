@@ -74,6 +74,9 @@ public class KeyguardStatusBarView extends RelativeLayout
     private boolean mShowBatteryText;
     private Boolean mForceBatteryText;
 
+    private boolean mBatteryStyleTextOnly;
+    private int mLevel;
+
     public KeyguardStatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -249,12 +252,22 @@ public class KeyguardStatusBarView extends RelativeLayout
 
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
-        String percentage = NumberFormat.getPercentInstance().format((double) level / 100.0);
-        mBatteryLevel.setText(percentage);
         boolean changed = mBatteryCharging != charging;
         mBatteryCharging = charging;
+        mLevel = level;
+        updateBatteryLevelText();
         if (changed) {
             updateVisibilities();
+        }
+    }
+
+    private void updateBatteryLevelText() {
+        if (mBatteryCharging & mBatteryStyleTextOnly) {
+            mBatteryLevel.setText(getResources().getString(
+                    R.string.battery_level_template_charging, mLevel));
+        } else {
+            mBatteryLevel.setText(getResources().getString(
+                    R.string.battery_level_template, mLevel));
         }
     }
 
@@ -345,6 +358,7 @@ public class KeyguardStatusBarView extends RelativeLayout
 
     @Override
     public void onTuningChanged(String key, String newValue) {
+        mBatteryStyleTextOnly = false;
         switch (key) {
             case STATUS_BAR_SHOW_BATTERY_PERCENT:
                 mShowBatteryText = newValue != null && Integer.parseInt(newValue) == 2;
@@ -354,6 +368,7 @@ public class KeyguardStatusBarView extends RelativeLayout
                     final int value = Integer.parseInt(newValue);
                     if (value == BatteryMeterDrawable.BATTERY_STYLE_TEXT) {
                         mForceBatteryText = true;
+                        mBatteryStyleTextOnly = true;
                     } else if (value == BatteryMeterDrawable.BATTERY_STYLE_HIDDEN) {
                         mForceBatteryText = false;
                     } else {
@@ -363,5 +378,6 @@ public class KeyguardStatusBarView extends RelativeLayout
                 break;
         }
         updateVisibilities();
+        updateBatteryLevelText();
     }
 }
