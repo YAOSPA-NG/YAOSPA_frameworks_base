@@ -17,12 +17,12 @@
 package com.android.systemui;
 
 import android.content.Context;
-import android.icu.text.NumberFormat;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.tuner.TunerService;
 
@@ -39,13 +39,28 @@ public class BatteryLevelTextView extends TextView implements
 
     private boolean mRequestedVisibility;
 
+    private boolean mBatteryStyleTextOnly;
+
+    private int mLevel;
+    private boolean mCharging;
+
     public BatteryLevelTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
-        setText(NumberFormat.getPercentInstance().format((double) level / 100.0));
+        mLevel = level;
+        mCharging = charging;
+        updateBatteryLevelText();
+    }
+
+    private void updateBatteryLevelText() {
+        if (mCharging & mBatteryStyleTextOnly) {
+            setText(getResources().getString(R.string.battery_level_template_charging, mLevel));
+        } else {
+            setText(getResources().getString(R.string.battery_level_template, mLevel));
+        }
     }
 
     public void setBatteryController(BatteryController batteryController) {
@@ -80,9 +95,11 @@ public class BatteryLevelTextView extends TextView implements
             case STATUS_BAR_BATTERY_STYLE:
                 final int value = newValue == null ?
                         BatteryMeterDrawable.BATTERY_STYLE_PORTRAIT : Integer.parseInt(newValue);
+                mBatteryStyleTextOnly = false;
                 switch (value) {
                     case BatteryMeterDrawable.BATTERY_STYLE_TEXT:
                         setVisibility(View.VISIBLE);
+                        mBatteryStyleTextOnly = true;
                         break;
                     case BatteryMeterDrawable.BATTERY_STYLE_HIDDEN:
                         setVisibility(View.GONE);
@@ -91,6 +108,7 @@ public class BatteryLevelTextView extends TextView implements
                         setVisibility(mRequestedVisibility ? View.VISIBLE : View.GONE);
                         break;
                 }
+                updateBatteryLevelText();
                 break;
             default:
                 break;
