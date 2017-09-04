@@ -94,7 +94,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
             mChangeCallbacks.add(cb);
         }
         if (!mHasReceivedBattery) return;
-        cb.onBatteryLevelChanged(mLevel, mPluggedIn, mCharging);
+        cb.onBatteryLevelChanged(mLevel, mPluggedIn, mCharging && !mCharged);
         cb.onPowerSaveChanged(mPowerSave);
     }
 
@@ -181,7 +181,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         synchronized (mChangeCallbacks) {
             final int N = mChangeCallbacks.size();
             for (int i = 0; i < N; i++) {
-                mChangeCallbacks.get(i).onBatteryLevelChanged(mLevel, mPluggedIn, mCharging);
+                mChangeCallbacks.get(i).onBatteryLevelChanged(mLevel, mPluggedIn, mCharging && !mCharged);
             }
         }
     }
