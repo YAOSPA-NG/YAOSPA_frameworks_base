@@ -122,7 +122,6 @@ public class BatteryMeterDrawable extends Drawable implements
     private int mCurrentFillColor = 0;
 
     private int mLevelAlpha;
-    private int mCurrentLevel;
     private int mStyle;
     private ValueAnimator mAnimator;
 
@@ -231,13 +230,6 @@ public class BatteryMeterDrawable extends Drawable implements
 
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
-        if (pluggedIn && !mChargingAnimationsEnabled && mCurrentLevel != level) {
-            startChargingAnimation(mCurrentLevel == 0 ? 3 : 1);
-            mCurrentLevel = level;
-        } else if (!pluggedIn) {
-            mCurrentLevel = 0;
-            cancelChargingAnimation();
-        }
         mLevel = level;
         mPluggedIn = pluggedIn;
         mCharging = charging;
@@ -246,7 +238,7 @@ public class BatteryMeterDrawable extends Drawable implements
 
     private void startChargingAnimation(final int repeat) {
         if (mLevelAlpha == 0 || mAnimator != null
-                || mStyle != BATTERY_STYLE_CIRCLE) {
+                || (mStyle != BATTERY_STYLE_CIRCLE && mStyle != BATTERY_STYLE_PORTRAIT)) {
             return;
         }
         final int defaultAlpha = mLevelAlpha;
@@ -271,15 +263,15 @@ public class BatteryMeterDrawable extends Drawable implements
             public void onAnimationEnd(Animator animation) {
                 mLevelDrawable.setAlpha(defaultAlpha);
                 mAnimator = null;
-                if (repeat <= 0) {
-                    startChargingAnimation(0);
-                } else if (repeat != 1) {
+                if (repeat == -1) { // infinite repeat
+                    startChargingAnimation(-1);
+                } else if (repeat >= 1) { // only repeat until we're at 0
                     startChargingAnimation(repeat - 1);
                 }
             }
         });
-        mAnimator.setDuration(2000);
-        mAnimator.setStartDelay(500);
+        mAnimator.setDuration(4000);
+        mAnimator.setStartDelay(0);
         mAnimator.start();
     }
 
@@ -381,14 +373,11 @@ public class BatteryMeterDrawable extends Drawable implements
         if (!mInitialized) {
             init();
         }
-
         drawBattery(c);
-        if (mChargingAnimationsEnabled) {
-            if (mLevel < 100 && mPluggedIn) {
-                startChargingAnimation(0);
-            } else {
-                cancelChargingAnimation();
-            }
+        if (mAnimator == null && mCharging == true) {
+            startChargingAnimation(-1); // animate until canceled when starting to charge
+        } else if (mAnimator != null && mCharging == false) {
+            cancelChargingAnimation(); // stop animation when charge complete or unplugged
         }
     }
 
