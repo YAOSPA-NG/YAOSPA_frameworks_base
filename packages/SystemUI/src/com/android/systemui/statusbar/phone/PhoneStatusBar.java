@@ -4800,7 +4800,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     private void showOperatorName() {
         boolean showOperatorName = (0 != Settings.System.getInt(
-                mContext.getContentResolver(), SHOW_OPERATOR_NAME, 1));
+                mContext.getContentResolver(), SHOW_OPERATOR_NAME, 0));
         final boolean enableOperatorName = (mContext.getResources().
                 getBoolean(com.android.internal.R.bool.config_showOperatorNameInStatusBar));
 
