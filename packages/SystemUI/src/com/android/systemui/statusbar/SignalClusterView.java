@@ -25,6 +25,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
+import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
@@ -113,6 +114,8 @@ public class SignalClusterView
     private boolean mBlockEthernet;
     private TelephonyManager mTelephonyManager;
 
+    private boolean mSmallRoamingIcon;
+
     public SignalClusterView(Context context) {
         this(context, null);
     }
@@ -140,6 +143,11 @@ public class SignalClusterView
 
     @Override
     public void onTuningChanged(String key, String newValue) {
+        if (Settings.Secure.ROAMING_ICON_STYLE.equals(key)) {
+            mSmallRoamingIcon = newValue == null ? false : Integer.parseInt(newValue) == 1;
+            apply();
+            return;
+        }
         if (!StatusBarIconController.ICON_BLACKLIST.equals(key)) {
             return;
         }
@@ -229,6 +237,7 @@ public class SignalClusterView
         mMobileSignalGroup.setPaddingRelative(0, 0, endPadding, 0);
 
         TunerService.get(mContext).addTunable(this, StatusBarIconController.ICON_BLACKLIST);
+        TunerService.get(mContext).addTunable(this, Settings.Secure.ROAMING_ICON_STYLE);
 
         apply();
         applyIconTint();
@@ -716,8 +725,8 @@ public class SignalClusterView
         private String mMobileDescription, mMobileTypeDescription;
 
         private ViewGroup mMobileGroup;
-        private ImageView mMobile, mMobileDark, mMobileType, mMobileRoaming, mDataNetworkType,
-                mMobileEmbms;
+        private ImageView mMobile, mMobileDark, mMobileType, mMobileRoaming, mMobileRoamingSmall,
+                mDataNetworkType, mMobileEmbms;
 
         private int mDataActivityId = 0, mMobileActivityId = 0, mDataNetworkTypeId =0,
                 mMobileEmbmsId = 0;
@@ -749,6 +758,7 @@ public class SignalClusterView
             mMobileSingleGroup = (ViewGroup) root.findViewById(R.id.mobile_signal_single);
             mMobileStackedGroup = (ViewGroup) root.findViewById(R.id.mobile_signal_stacked);
             mMobileRoaming  = (ImageView) root.findViewById(R.id.mobile_roaming);
+            mMobileRoamingSmall  = (ImageView) root.findViewById(R.id.mobile_roaming_small);
         }
 
         public boolean apply(boolean isSecondaryIcon) {
@@ -824,7 +834,13 @@ public class SignalClusterView
             mDataNetworkType.setVisibility(mDataNetworkTypeId != 0 ? View.VISIBLE
                     : View.GONE);
             mMobileEmbms.setVisibility(mMobileEmbmsId != 0 ? View.VISIBLE : View.GONE);
-            mMobileRoaming.setVisibility(mRoaming ? View.VISIBLE : View.GONE);
+            if (mSmallRoamingIcon) {
+                mMobileRoaming.setVisibility(View.GONE);
+                mMobileRoamingSmall.setVisibility(mRoaming ? View.VISIBLE : View.GONE);
+            } else {
+                mMobileRoaming.setVisibility(mRoaming ? View.VISIBLE : View.GONE);
+                mMobileRoamingSmall.setVisibility(View.GONE);
+            }
 
             return mMobileVisible;
         }
@@ -886,8 +902,13 @@ public class SignalClusterView
             setTint(mMobileType, StatusBarIconController.getTint(tintArea, mMobileType, tint));
             setTint(mDataNetworkType, StatusBarIconController.getTint(tintArea,
                     mDataNetworkType, tint));
-            setTint(mMobileRoaming, StatusBarIconController.getTint(tintArea, mMobileRoaming,
-                    tint));
+            if (mSmallRoamingIcon) {
+                setTint(mMobileRoamingSmall, StatusBarIconController.getTint(tintArea,
+                        mMobileRoamingSmall, tint));
+            } else {
+                setTint(mMobileRoaming, StatusBarIconController.getTint(tintArea, mMobileRoaming,
+                        tint));
+            }
         }
     }
 }

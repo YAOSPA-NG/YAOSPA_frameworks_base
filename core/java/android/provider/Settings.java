@@ -5584,6 +5584,17 @@ public final class Settings {
         public static final String KEYGUARD_VOICE_ASSIST = "keyguard_voice_assist";
 
         /**
+         * Whether to use new AOSP big "R" roaming statusbar icon right of signal icon or use
+         * an "old CAF-like" small "R" prefix icon left to the network type of signal icon
+         *
+         * 0 = AOSP roaming icon (default)
+         * 1 = CAF-like roaming icon
+         *
+         * @hide
+         */
+        public static final String ROAMING_ICON_STYLE = "roaming_icon_style";
+
+        /**
          * @deprecated Use {@link android.provider.Settings.Global#DATA_ROAMING} instead
          */
         @Deprecated
