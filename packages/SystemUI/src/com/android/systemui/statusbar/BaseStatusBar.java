@@ -379,7 +379,7 @@ public abstract class BaseStatusBar extends SystemUI implements
                 Settings.System.USE_SLIM_RECENTS, 0, UserHandle.USER_CURRENT) == 1;
 
         if (slimRecents) {
-            mSlimRecents = new RecentController(mContext, mLayoutDirection);
+            mSlimRecents = new RecentController(mContext);
             mRecents = null;
             rebuildRecentsScreen();
         } else {

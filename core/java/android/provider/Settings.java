@@ -4318,6 +4318,12 @@ public final class Settings {
         public static final String SLIM_RECENTS_CORNER_RADIUS = "slim_recents_corner_radius";
 
         /**
+         * Apps to blacklist in Slim Recents
+         * @hide
+         */
+        public static final String SLIM_RECENTS_BLACKLIST_VALUES = "slim_recents_blacklist_values";
+
+        /**
          * Whether to use switch to last app or stay on current app when exiting SlimRecents
          * using the recent key
          * @hide
