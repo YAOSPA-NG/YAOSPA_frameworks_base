@@ -34,7 +34,4 @@
     <!-- The duration (in milliseconds) of recent app screen animation. -->
     <integer name="config_recentDefaultDur">200</integer>
 
-    <!-- The duration (in milliseconds) of recent app screen exit animation. -->
-    <integer name="config_recentExitDur">350</integer>
-
 </resources>
