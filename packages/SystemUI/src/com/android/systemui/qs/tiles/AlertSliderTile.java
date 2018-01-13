@@ -389,8 +389,6 @@ public class AlertSliderTile extends QSTile<QSTile.State>  {
 
         public void setSilentMode(int silentState) {
             int silentMode = silentState == Settings.Global.ZEN_MODE_ALARMS ? 0 : 1;
-            Settings.System.putIntForUser(mContext.getContentResolver(),
-                    Settings.System.ALERT_SLIDER_SILENT_MODE, silentMode, UserHandle.USER_CURRENT);
         }
     }
 
