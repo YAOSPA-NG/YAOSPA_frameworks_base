@@ -43,6 +43,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
 import android.provider.Settings.Global;
+import android.text.TextUtils;
 import android.transition.AutoTransition;
 import android.transition.Transition;
 import android.transition.TransitionManager;
@@ -146,6 +147,8 @@ public class VolumeDialog implements TunerService.Tunable {
     private boolean mShowFullZen;
     private TunerZenModePanel mZenPanel;
 
+    private boolean mHasAlertSlider = false;
+
     public VolumeDialog(Context context, int windowType, VolumeDialogController controller,
             ZenModeController zenModeController, Callback callback) {
         mContext = context;
@@ -170,6 +173,16 @@ public class VolumeDialog implements TunerService.Tunable {
 
         final Configuration currentConfig = mContext.getResources().getConfiguration();
         mDensity = currentConfig.densityDpi;
+
+        mHasAlertSlider = mContext.getResources()
+                .getBoolean(com.android.internal.R.bool.config_hasAlertSlider)
+                && !TextUtils.isEmpty(mContext.getResources().getString(
+                        com.android.internal.R.string.alert_slider_state_path))
+                && !TextUtils.isEmpty(mContext.getResources().getString(
+                        com.android.internal.R.string.alert_slider_uevent_match_path));
+        if (mHasAlertSlider) {
+            mShowFullZen = false;
+        }
     }
 
     private void initDialog() {
@@ -280,7 +293,7 @@ public class VolumeDialog implements TunerService.Tunable {
     @Override
     public void onTuningChanged(String key, String newValue) {
         if (SHOW_FULL_ZEN.equals(key)) {
-            mShowFullZen = newValue != null && Integer.parseInt(newValue) != 0;
+            mShowFullZen = newValue != null && !mHasAlertSlider && Integer.parseInt(newValue) != 0;
         }
     }
 

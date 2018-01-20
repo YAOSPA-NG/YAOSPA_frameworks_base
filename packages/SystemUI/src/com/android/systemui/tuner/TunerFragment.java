@@ -29,6 +29,7 @@ import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.Preference.OnPreferenceChangeListener;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,6 +43,8 @@ public class TunerFragment extends PreferenceFragment {
     private static final String TAG = "TunerFragment";
 
     private static final String KEY_BATTERY_PCT = "battery_pct";
+
+    private static final String KEY_SYSUI_SHOW_FULL_ZEN = "sysui_show_full_zen";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,20 @@ public class TunerFragment extends PreferenceFragment {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        boolean hasAlertSlider = getContext().getResources()
+                .getBoolean(com.android.internal.R.bool.config_hasAlertSlider)
+                && !TextUtils.isEmpty(getContext().getResources().getString(
+                        com.android.internal.R.string.alert_slider_state_path))
+                && !TextUtils.isEmpty(getContext().getResources().getString(
+                        com.android.internal.R.string.alert_slider_uevent_match_path));
+
         addPreferencesFromResource(R.xml.tuner_prefs);
+
+        SwitchPreference showFullZen = (SwitchPreference) findPreference(KEY_SYSUI_SHOW_FULL_ZEN);
+        if (showFullZen != null && hasAlertSlider) {
+            showFullZen.setChecked(false);
+            showFullZen.setEnabled(false);
+        }
     }
 
     @Override
