@@ -165,7 +165,12 @@ public class AlertSliderTile extends QSTile<QSTile.State>  {
     }
 
     private void setZenMode(int mode) {
+        Settings.System.putInt(mContext.getContentResolver(),
+                Settings.System.ALERT_SLIDER_VOLUME_LOCK, 0);
         mController.setZen(mode, null, TAG);
+        Settings.System.putInt(mContext.getContentResolver(),
+                Settings.System.ALERT_SLIDER_VOLUME_LOCK,
+                mode == Settings.Global.ZEN_MODE_OFF ? 0 : 1);
     }
 
     @Override

@@ -129,7 +129,12 @@ public class AlertSliderObserver extends UEventObserver {
         if (mHasVibrator) {
             mVibrator.vibrate(50);
         }
+        Settings.System.putInt(mContext.getContentResolver(),
+                Settings.System.ALERT_SLIDER_VOLUME_LOCK, 0);
         mNotificationManager.setZenMode(zenMode, null, TAG);
+        Settings.System.putInt(mContext.getContentResolver(),
+                Settings.System.ALERT_SLIDER_VOLUME_LOCK,
+                zenMode == Settings.Global.ZEN_MODE_OFF ? 0 : 1);
         // Release wakelock when zen mode is set
         if (mWakeLock.isHeld()) {
             mWakeLock.release();

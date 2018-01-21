@@ -3939,6 +3939,14 @@ public final class Settings {
         public static final String ALERT_SLIDER_SILENT_MODE = "alert_slider_silent_mode";
 
         /**
+         * Sound volume lock..
+         * 0: volume unlocked (default)
+         * 1: volume locked, no change allowed whatsoever
+         * @hide
+         */
+        public static final String ALERT_SLIDER_VOLUME_LOCK = "alert_slider_volume_lock";
+
+        /**
          * Controls whether the shutter sound is played when making a screenshot
          * @hide
          */

@@ -2292,7 +2292,9 @@ public class AudioService extends IAudioService.Stub {
     }
 
     private void setRingerMode(int ringerMode, String caller, boolean external) {
-        if (mUseFixedVolume || isPlatformTelevision()) {
+        boolean sliderVolumeLock = Settings.System.getInt(
+                    mContentResolver, Settings.System.ALERT_SLIDER_VOLUME_LOCK, 0) != 0;
+        if (mUseFixedVolume || sliderVolumeLock || isPlatformTelevision()) {
             return;
         }
         if (caller == null || caller.length() == 0) {

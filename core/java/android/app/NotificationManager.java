@@ -36,6 +36,7 @@ import android.os.ServiceManager;
 import android.os.StrictMode;
 import android.os.UserHandle;
 import android.provider.Settings.Global;
+import android.provider.Settings.System;
 import android.service.notification.NotificationListenerService.Ranking;
 import android.service.notification.StatusBarNotification;
 import android.service.notification.ZenModeConfig;
@@ -417,11 +418,15 @@ public class NotificationManager
      * @hide
      */
     public void setZenMode(int mode, Uri conditionId, String reason) {
-        INotificationManager service = getService();
-        try {
-            service.setZenMode(mode, conditionId, reason);
-        } catch (RemoteException e) {
-            throw e.rethrowFromSystemServer();
+        boolean sliderVolumeLock = System.getInt(
+                    mContext.getContentResolver(), System.ALERT_SLIDER_VOLUME_LOCK, 0) != 0;
+        if (!sliderVolumeLock) {
+            INotificationManager service = getService();
+            try {
+                service.setZenMode(mode, conditionId, reason);
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
     }
 
