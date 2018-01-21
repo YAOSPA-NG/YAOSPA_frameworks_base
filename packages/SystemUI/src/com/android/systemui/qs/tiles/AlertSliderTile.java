@@ -74,6 +74,7 @@ public class AlertSliderTile extends QSTile<QSTile.State>  {
     private final ZenModeController mController;
     private final AlertSliderDetailAdapter mDetailAdapter;
     private Policy mPolicy;
+    private final NotificationManager mNotificationManager;
 
     private boolean mListening;
     private boolean mHasAlertSlider = false;
@@ -87,6 +88,8 @@ public class AlertSliderTile extends QSTile<QSTile.State>  {
                 && !TextUtils.isEmpty(mContext.getResources().getString(com.android.internal.R.string.alert_slider_state_path))
                 && !TextUtils.isEmpty(mContext.getResources().getString(com.android.internal.R.string.alert_slider_uevent_match_path));
         mPolicy = NotificationManager.from(mContext).getNotificationPolicy();
+        mNotificationManager
+               = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -161,16 +164,11 @@ public class AlertSliderTile extends QSTile<QSTile.State>  {
     }
 
     private int getZenMode() {
-        return mController.getZen();
+        return mNotificationManager.getZenMode();
     }
 
     private void setZenMode(int mode) {
-        Settings.System.putInt(mContext.getContentResolver(),
-                Settings.System.ALERT_SLIDER_VOLUME_LOCK, 0);
-        mController.setZen(mode, null, TAG);
-        Settings.System.putInt(mContext.getContentResolver(),
-                Settings.System.ALERT_SLIDER_VOLUME_LOCK,
-                mode == Settings.Global.ZEN_MODE_OFF ? 0 : 1);
+        mNotificationManager.setZenMode(mode, null, TAG, mode != Settings.Global.ZEN_MODE_OFF);
     }
 
     @Override

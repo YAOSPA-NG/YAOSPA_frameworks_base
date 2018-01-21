@@ -18,11 +18,14 @@ package com.android.server.policy;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.media.IAudioService;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.os.UEventObserver;
 import android.os.UserHandle;
 import android.os.Vibrator;
@@ -129,12 +132,13 @@ public class AlertSliderObserver extends UEventObserver {
         if (mHasVibrator) {
             mVibrator.vibrate(50);
         }
-        Settings.System.putInt(mContext.getContentResolver(),
-                Settings.System.ALERT_SLIDER_VOLUME_LOCK, 0);
-        mNotificationManager.setZenMode(zenMode, null, TAG);
-        Settings.System.putInt(mContext.getContentResolver(),
-                Settings.System.ALERT_SLIDER_VOLUME_LOCK,
-                zenMode == Settings.Global.ZEN_MODE_OFF ? 0 : 1);
+        mNotificationManager.setZenMode(zenMode, null, TAG,
+                zenMode != Settings.Global.ZEN_MODE_OFF);
+        try {
+            getAudioService().setVolumeLock(zenMode != Settings.Global.ZEN_MODE_OFF);
+        } catch (RemoteException e) {
+            // do nothing.
+        }
         // Release wakelock when zen mode is set
         if (mWakeLock.isHeld()) {
             mWakeLock.release();
@@ -156,5 +160,14 @@ public class AlertSliderObserver extends UEventObserver {
                 mContext.getContentResolver(), Settings.System.ALERT_SLIDER_SILENT_MODE, 0,
                 UserHandle.USER_CURRENT);
         return silentMode != 0 ? Settings.Global.ZEN_MODE_NO_INTERRUPTIONS : Settings.Global.ZEN_MODE_ALARMS;
+    }
+
+    static IAudioService getAudioService() {
+        IAudioService audioService = IAudioService.Stub.asInterface(
+                ServiceManager.checkService(Context.AUDIO_SERVICE));
+        if (audioService == null) {
+            Log.w(TAG, "Unable to find IAudioService interface.");
+        }
+        return audioService;
     }
 }

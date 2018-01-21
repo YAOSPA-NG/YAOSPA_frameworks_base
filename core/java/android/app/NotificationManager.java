@@ -96,6 +96,9 @@ public class NotificationManager
     private static String TAG = "NotificationManager";
     private static boolean localLOGV = false;
 
+    /** Is changing zen mode allowed */
+    private boolean mSliderVolumeLock = false;
+
     /**
      * Intent that is broadcast when the state of {@link #getEffectsSuppressor()} changes.
      * This broadcast is only sent to registered receivers.
@@ -417,10 +420,17 @@ public class NotificationManager
     /**
      * @hide
      */
+    public void setZenMode(int mode, Uri conditionId, String reason, boolean lock) {
+        mSliderVolumeLock = false;
+        setZenMode(mode, conditionId, reason);
+        mSliderVolumeLock = lock;
+    }
+
+    /**
+     * @hide
+     */
     public void setZenMode(int mode, Uri conditionId, String reason) {
-        boolean sliderVolumeLock = System.getInt(
-                    mContext.getContentResolver(), System.ALERT_SLIDER_VOLUME_LOCK, 0) != 0;
-        if (!sliderVolumeLock) {
+        if (!mSliderVolumeLock) {
             INotificationManager service = getService();
             try {
                 service.setZenMode(mode, conditionId, reason);
