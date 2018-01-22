@@ -379,7 +379,6 @@ public class AlertSliderTile extends QSTile<QSTile.State>  {
                     if (fromClick) {
                         MetricsLogger.action(mContext, MetricsEvent.QS_DND, state);
                         mCollapseDetailOnZenChanged = false;
-                        setSilentMode(state);
                         setZenMode(state);
                         refresh(state);
                     }
@@ -389,10 +388,6 @@ public class AlertSliderTile extends QSTile<QSTile.State>  {
             @Override
             public void onInteraction() { }
         };
-
-        public void setSilentMode(int silentState) {
-            int silentMode = silentState == Settings.Global.ZEN_MODE_ALARMS ? 0 : 1;
-        }
     }
 
     private boolean isPriorityCategoryEnabled(int categoryType) {
