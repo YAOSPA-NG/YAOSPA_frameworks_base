@@ -45,4 +45,7 @@
   <!-- Vendor warning -->
   <java-symbol type="string" name="system_error_vendorprint" />
 
+  <!-- Screenshot edit action -->
+  <java-symbol type="string" name="edit" />
+
 </resources>

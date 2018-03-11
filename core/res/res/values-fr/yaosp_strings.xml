@@ -30,4 +30,7 @@
     <!-- Vendor mismatched fingerprint warning [CHAR LIMIT=NONE] -->
     <string name="system_error_vendorprint">Mauvaise image \'vendor\' detectée. L\'image \'vendor\' requise pour cette ROM est <xliff:g id="string">%s</xliff:g>. Veuillez flasher l\'image \'vendor\' correspondante afin de supprimer ce message et garantir que le système fonctionnera correctement.</string>
 
+    <!-- ActionBar action to edit the current selection [CHAR LIMIT=10] -->
+    <string name="edit">Editer</string>
+
 </resources>

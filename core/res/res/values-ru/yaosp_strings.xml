@@ -27,4 +27,7 @@
     <string name="app_killed_message"><xliff:g id="string">%s</xliff:g> закрыто</string>
     <string name="no_app_killed_message">Нечего закрывать</string>
 
+    <!-- ActionBar action to edit the current selection [CHAR LIMIT=10] -->
+    <string name="edit">Изменить</string>
+
 </resources>
