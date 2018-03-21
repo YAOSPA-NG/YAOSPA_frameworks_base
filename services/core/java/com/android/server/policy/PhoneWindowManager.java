@@ -4115,7 +4115,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 IStatusBarService notificationBarService = getStatusBarService();
                 if (notificationBarService != null) {
                     try {
-                        notificationBarService.expandNotificationsPanel();
+                        if (notificationBarService.panelRevealed()) {
+                            notificationBarService.collapsePanels();
+                        } else {
+                            notificationBarService.expandNotificationsPanel();
+                        }
                     } catch (RemoteException e) {
                         // do nothing.
                     }
@@ -4125,7 +4129,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 IStatusBarService qspanelBarService = getStatusBarService();
                 if (qspanelBarService != null) {
                     try {
-                        qspanelBarService.expandSettingsPanel(null);
+                        if (qspanelBarService.panelRevealed()) {
+                            qspanelBarService.collapsePanels();
+                        } else {
+                            qspanelBarService.expandSettingsPanel(null);
+                        }
                     } catch (RemoteException e) {
                         // do nothing.
                     }

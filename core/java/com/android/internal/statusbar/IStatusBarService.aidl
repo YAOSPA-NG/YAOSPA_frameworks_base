@@ -41,6 +41,7 @@ interface IStatusBarService
     void setImeWindowStatus(in IBinder token, int vis, int backDisposition,
             boolean showImeSwitcher);
     void expandSettingsPanel(String subPanel);
+    boolean panelRevealed();
 
     // ---- Methods below are for use by the status bar policy services ----
     // You need the STATUS_BAR_SERVICE permission
