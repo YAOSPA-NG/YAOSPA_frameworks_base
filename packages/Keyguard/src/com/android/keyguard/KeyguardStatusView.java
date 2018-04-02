@@ -155,6 +155,11 @@ public class KeyguardStatusView extends GridLayout {
 
         mClockView.setFormat12Hour(Patterns.clockView12);
         mClockView.setFormat24Hour(Patterns.clockView24);
+
+        int defaultColor = mContext.getResources().getColor(R.color.clock_white);
+        int clockColor = Settings.Secure.getInt(mContext.getContentResolver(),
+                    Settings.Secure.CLOCK_COLOR_KEYGUARD, defaultColor);
+        mClockView.setTextColor(clockColor);
     }
 
     private void refresh() {

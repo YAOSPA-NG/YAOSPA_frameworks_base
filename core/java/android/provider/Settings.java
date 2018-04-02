@@ -5532,6 +5532,12 @@ public final class Settings {
         public static final String CLOCK_COLOR = "clock_color";
 
         /**
+         * Setting for keyguard clock color
+         * @hide
+         */
+        public static final String CLOCK_COLOR_KEYGUARD = "clock_color_keyguard";
+
+        /**
          * AM/PM Style for clock options
          * 0 - Normal AM/PM
          * 1 - Small AM/PM
